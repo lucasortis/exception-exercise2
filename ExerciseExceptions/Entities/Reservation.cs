@@ -1,4 +1,5 @@
 ﻿using System;
+using ExerciseExceptions.Entities.Exceptions;
 
 namespace ExerciseExceptions.Entities
 {
@@ -13,11 +14,15 @@ namespace ExerciseExceptions.Entities
 
         }
 
-        public Reservation(int roomNumber, DateTime checkin, DateTime checkout)
+        public Reservation(int roomNumber, DateTime checkIn, DateTime checkOut)
         {
+            if (checkOut <= checkIn)
+            {
+                throw new DomainException("Check-in date must be before check-out date");
+            }
             RoomNumber = roomNumber;
-            CheckIn = checkin;
-            CheckOut = checkout;
+            CheckIn = checkIn;
+            CheckOut = checkOut;
         }
 
         public int Duration()
@@ -28,6 +33,17 @@ namespace ExerciseExceptions.Entities
 
         public void UpdateDates(DateTime checkIn, DateTime checkOut)
         {
+            DateTime now = DateTime.Now;
+
+            if (checkIn < now || checkOut < now)
+            {
+                throw new DomainException("Reservation dates for update must be future dates");
+            } 
+            if (checkOut <= checkIn)
+            {
+                throw new DomainException("Check-in date must be before check-out date");
+            }
+
             CheckIn = checkIn;
             CheckOut = checkOut;
         }
